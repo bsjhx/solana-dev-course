@@ -19,5 +19,3 @@ if (publicKey) {
         `💰 Finished! The balance for the wallet at address ${publicKey} is ${balanceInSOL}!`
     );
 }
-
-// GgJJRwLg9NzFQ97o1CJLGLp1KLSUMBwFc6eQNVEr4fbW
