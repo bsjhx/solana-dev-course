@@ -1,5 +1,5 @@
 [package]
-name = ",,,,"
+name = "Test"
 version = "0.1.0"
 description = "Native Solana Program"
 edition = "2021"
