@@ -13,3 +13,4 @@ no-entrypoint = []
 [dependencies]
 solana-program = "1.16.24"
 borsh = "0.10.3"
+thiserror = "1.0.59"
