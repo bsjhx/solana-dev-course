@@ -22,6 +22,15 @@ pub mod anchor_counter {
         msg!("Counter incremented. Current count: {}", counter.count);
         Ok(())
     }
+
+    pub fn increment_by_value(ctx: Context<Update>, value: u64) -> Result<()> {
+        msg!("Hello");
+        let counter = &mut ctx.accounts.counter;
+        msg!("Previous counter: {}", counter.count);
+        counter.count = counter.count.checked_add(value).unwrap();
+        msg!("Counter incremented. Current count: {}", counter.count);
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]

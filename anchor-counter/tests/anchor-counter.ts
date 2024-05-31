@@ -5,17 +5,21 @@ import { AnchorCounter } from "../target/types/anchor_counter"
 import mlog from 'mocha-logger';
 
 describe("anchor-counter", () => {
-  // Configure the client to use the local cluster.
-  const provider = anchor.AnchorProvider.env()
-  anchor.setProvider(provider)
+  let provider
+  let programProvider
+  let program
+  let counter
 
-  const program = anchor.workspace.AnchorCounter as Program<AnchorCounter>
-  const programProvider = program.provider as anchor.AnchorProvider;
-  const counter = anchor.web3.Keypair.generate();
+  beforeEach(async () => {
+    // Configure the client to use the local cluster..
+    provider = anchor.AnchorProvider.env()
+    anchor.setProvider(provider)
 
+    program = anchor.workspace.AnchorCounter as Program<AnchorCounter>
 
-  const playerOne = programProvider.wallet;
-  it("Is initialized!", async () => {
+    programProvider = program.provider as anchor.AnchorProvider;
+    counter = anchor.web3.Keypair.generate();
+
     const tx = await program.methods
       .initialize()
       .accounts({
@@ -23,7 +27,9 @@ describe("anchor-counter", () => {
       })
       .signers([counter])
       .rpc()
+  });
 
+  it("Is initialized!", async () => {
     const account = await program.account.counter.fetch(counter.publicKey)
     expect(account.count.toNumber()).to.equal(0)
   })
@@ -36,5 +42,15 @@ describe("anchor-counter", () => {
 
     const account = await program.account.counter.fetch(counter.publicKey)
     expect(account.count.toNumber()).to.equal(1)
+  })
+
+  it("Incremented the count by value", async () => {
+    const tx = await program.methods
+      .incrementByValue(new anchor.BN(10))
+      .accounts({ counter: counter.publicKey, user: provider.wallet.publicKey })
+      .rpc()
+
+    const account = await program.account.counter.fetch(counter.publicKey)
+    expect(account.count.toNumber()).to.equal(10)
   })
 })
